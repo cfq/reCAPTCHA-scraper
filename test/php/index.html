@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>ReCAPTCHA Test Page</title>
+        <style type="text/css" media="screen">
+            h1, form, #output {
+                width: 35em;
+                margin: auto;
+                font: 1em/1.4em "Lucida Grande", Helvetica, Arial, sans-serif;
+            }
+            
+            h1 {
+                font: 1.4em/2em Baskerville, Georgia, serif;
+                color: #b41b05;
+                border-bottom: 3px double #f77e00;
+                text-align: center;
+            }
+            
+            label {
+                float: left;
+            }
+            
+            input[type="text"] {
+                margin-left: 2em;
+            }
+            
+        </style>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function (){
+                $('form').submit(function ( event ){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    $.post('test.php', {public_key: $('#public_key').val()}, function (data){
+                        $('#output #challange').html( data.challenge );
+                        $('#output #image').html( '<img src="'+data.imgsrc+'" />' );
+                    },"json")
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>ReCAPTCHA Scraper Test</h1>
+        <form action="test.php" method="post">
+            <p>
+                <label for="public_key">Your reCAPTCHA public key:</label>
+                <input type="text" id="public_key" name="public_key" value="" placeholder="Your public key must be 40 characters long" size="40" required />
+            </p>
+            
+            <p><input type="submit" value="Click here to test" /></p>
+        </form>
+        <div id="output">
+            <dl>
+                <dt>Challange</dt>
+                <dd id="challange"></dd>
+
+                <dt>Image</dt>
+                <dd id="image"></dd>
+            </dl>
+        </div>
+    </body>
+</html>
